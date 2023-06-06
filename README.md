@@ -28,6 +28,10 @@ Ensure node v12.22.12 or greater is installed on your local machine.
 3. Run `npm audit fix` to fix all the node modules dependencies on your local machine.
 3. Run `botonic serve` or `npx @botonic/cli serve` to test it in your local machine.
 
+Microsoft Azure login:
+email: jadhav@ualberta.ca
+password: Callaghan99@
+
 
 
 
