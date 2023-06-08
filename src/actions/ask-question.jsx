@@ -3,44 +3,54 @@ import React from 'react';
 import { SearchClient, AzureKeyCredential } from '@azure/search-documents';
 
 const endpoint = 'https://medicare.search.windows.net';
-const api_key = 'SEAIQeqKgmhSIpwHE4gIdgktMe1eQrniJPMMNWzmKVAzSeCLgRTk';
-const index_name = 'faq';
+const apiKey = 'SEAIQeqKgmhSIpwHE4gIdgktMe1eQrniJPMMNWzmKVAzSeCLgRTk';
+const indexName = 'faq';
 
-const credential = new AzureKeyCredential(api_key);
-const searchClient = new SearchClient(endpoint, index_name, credential);
+const credential = new AzureKeyCredential(apiKey);
+const searchClient = new SearchClient(endpoint, indexName, credential);
 
 export default class extends React.Component {
   static async botonicInit(request) {
     const question = request.input.data;
 
-    // Execute search query to find matching documents
-    const searchResponse = await searchClient.search(question);
-    const searchResults = searchResponse.results.map(
-      (result) => result.document
-    );
+    // Create the search options
+    const searchOptions = {
+      includeTotalCount: true,
+      select: ['questions', 'answers'],
+    };
 
-    let formularyMatch = false;
-    let keywords = [];
+    // Perform the search query
+    const searchResults = await searchClient.search(question, searchOptions);
 
-    // Check if any search result contains matching keywords
-    for (const result of searchResults) {
-      const documentQuestion = result.questions;
+    let firstAnswer = ''; // Initialize firstAnswer variable
 
-      // Split the document question into individual words
-      const documentKeywords = documentQuestion.toLowerCase().split(' ');
+    // Iterate through the search results
+    for await (const result of searchResults.results) {
+      const { questions, answers } = result.document;
 
-      // Check if any word from the document question is present in the user's question
-      const matchedKeywords = documentKeywords.filter((keyword) =>
-        question.toLowerCase().includes(keyword)
-      );
-
-      if (matchedKeywords.length > 0) {
-        formularyMatch = true;
-        keywords = matchedKeywords;
-        break;
+      // Check if the first answer is empty and assign the value
+      if (!firstAnswer && answers) {
+        firstAnswer = answers;
       }
+
+      // You can also break the loop if you only want the first answer
+      break;
     }
 
-    return { question, formularyMatch, keywords };
+    return { question, firstAnswer };
+  }
+
+  render() {
+    const { firstAnswer } = this.props;
+
+    return (
+      <>
+        {firstAnswer ? (
+          <Text>{firstAnswer}</Text>
+        ) : (
+          <Text>No results found</Text>
+        )}
+      </>
+    );
   }
 }
