@@ -3,7 +3,6 @@
 Users can engage with my AI bot, designed to answer dynamic questions promptly.
 Whether users need details about coverage options, premium rates, or specific policy details, my AI bot provides personalized responses based on their inquiries. The conversational nature of the bot ensures a natural interaction, as it adapts to user needs, preferences, and queries.
 
-Say goodbye to the frustration of searching for specific healthcare insurance information. Experience a streamlined approach with my application, where an AI bot stands ready to assist you, simplifying the complexities of healthcare insurance and providing the answers you need, instantly.
 
 
 **What's in this project?**
